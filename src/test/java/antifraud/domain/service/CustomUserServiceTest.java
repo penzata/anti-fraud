@@ -36,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -96,8 +98,8 @@ class CustomUserServiceTest {
         then(encoder).should(times(1)).encode(stringCaptor.capture());
         verifyNoMoreInteractions(encoder);
 
-        String expectedArgumentPassword = stringCaptor.getValue();
-        assertEquals(expectedPassword, expectedArgumentPassword);
+        String actualArgumentPassword = stringCaptor.getValue();
+        assertEquals(expectedPassword, actualArgumentPassword);
     }
 
     @Test
@@ -244,14 +246,23 @@ class CustomUserServiceTest {
 
     @Test
     void WhenDeletingNonExistentUserThenThrowException() {
+        doThrow(UsernameNotFoundException.class)
+                .when(customUserRepository).findByUsernameIgnoreCase(any());
+
         Executable executable = () -> customUserService.deleteUser(any());
 
         assertThrows(UsernameNotFoundException.class, executable);
     }
 
     @Test
-    void WhenDeleteNonExistentUserThrowExceptionThenDoNotInvokeDelete() {
-        Executable executable = () -> customUserService.deleteUser(any());
+    void WhenDeleteNonExistentUserThenThrowExceptionAndDoNotInvokeDelete() {
+        doThrow(UsernameNotFoundException.class)
+                .when(customUserRepository).findByUsernameIgnoreCase(any());
+
+        try {
+            customUserService.deleteUser(any());
+        } catch (UsernameNotFoundException ignored) {
+        }
 
         then(customUserRepository).should(never()).deleteById(any());
         verifyNoMoreInteractions(customUserRepository);
@@ -265,6 +276,18 @@ class CustomUserServiceTest {
         Executable executable = () -> customUserService.deleteUser(any());
 
         assertDoesNotThrow(executable);
+    }
+
+    @Test
+    void WhenDeletingExistentUserThenDoNothing() {
+        given(customUserRepository.findByUsernameIgnoreCase(any()))
+                .willReturn(Optional.of(user));
+        doNothing().when(customUserRepository).deleteById(any());
+
+        customUserService.deleteUser(any());
+
+        then(customUserRepository).should(times(1)).deleteById(any());
+        verifyNoMoreInteractions(customUserRepository);
     }
 
     @Test
@@ -291,9 +314,9 @@ class CustomUserServiceTest {
         secondUser.setRole(UserRole.MERCHANT);
         user.setRole(UserRole.ADMINISTRATOR);
         given(customUserRepository.findByUsernameIgnoreCase(any()))
-                .willReturn(Optional.of(secondUser));
+                .willReturn(Optional.of(user));
 
-        Executable executable = () -> customUserService.changeUserRole(user);
+        Executable executable = () -> customUserService.changeUserRole(secondUser);
 
         assertThrows(ExistingAdministratorException.class, executable);
     }

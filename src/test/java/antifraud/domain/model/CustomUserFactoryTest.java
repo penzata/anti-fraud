@@ -59,21 +59,23 @@ class CustomUserFactoryTest {
 
     @Test
     void WhenMockingFactoryMethodThenReturnRightObject() {
+        CustomUser customUser = CustomUser.builder()
+                .username("JoHnDoE1")
+                .access(UserAccess.UNLOCK)
+                .build();
+
         try (MockedStatic<CustomUserFactory> mockedFactory = mockStatic(CustomUserFactory.class)) {
             mockedFactory
                     .when(() -> CustomUserFactory.createWithAccess(any(), any()))
-                    .thenReturn(CustomUser.builder()
-                            .username("JoHnDoE1")
-                            .access(UserAccess.UNLOCK)
-                            .build());
+                    .thenReturn(customUser);
 
             CustomUser userWithAccess = CustomUserFactory.createWithAccess(any(), any());
 
             assertAll(
                     () -> assertThat(userWithAccess)
-                            .hasFieldOrPropertyWithValue("username", "JoHnDoE1"),
+                            .hasFieldOrPropertyWithValue("username", customUser.getUsername()),
                     () -> assertThat(userWithAccess)
-                            .hasFieldOrPropertyWithValue("access", UserAccess.UNLOCK)
+                            .hasFieldOrPropertyWithValue("access", customUser.getAccess())
             );
         }
     }

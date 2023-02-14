@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import java.util.List;
 @Validated
 @PreAuthorize("hasRole('SUPPORT')")
 @RequestMapping("/api/antifraud/stolencard")
+@CrossOrigin
 public class CardController {
     private final StolenCardService stolenCardService;
 

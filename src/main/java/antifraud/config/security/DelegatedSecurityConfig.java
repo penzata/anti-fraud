@@ -36,19 +36,22 @@ public class DelegatedSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .httpBasic(h -> h.authenticationEntryPoint(authEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(h -> h.frameOptions().disable())
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.POST, "/api/auth/user").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/list-access").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/auth/user/**").hasRole(UserRole.ADMINISTRATOR.name())
                         .requestMatchers(HttpMethod.GET, "/api/auth/list")
                         .hasAnyRole(UserRole.ADMINISTRATOR.name(), UserRole.SUPPORT.name())
                         .requestMatchers(HttpMethod.PUT, "/api/auth/**").hasRole(UserRole.ADMINISTRATOR.name())
                         .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole(UserRole.MERCHANT.name())
                         .requestMatchers("/api/antifraud/**").hasRole(UserRole.SUPPORT.name())
-                        .requestMatchers("/actuator/shutdown").permitAll()
-                        .anyRequest().denyAll())
+                        .requestMatchers("/actuator/shutdown").permitAll())
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();

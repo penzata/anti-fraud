@@ -9,4 +9,11 @@ public class IPFactory {
                 .ipAddress(ipAddress)
                 .build();
     }
+
+    public static IP createWithId(Long id, String ipAddress) {
+        return IP.builder()
+                .id(id)
+                .ipAddress(ipAddress)
+                .build();
+    }
 }
