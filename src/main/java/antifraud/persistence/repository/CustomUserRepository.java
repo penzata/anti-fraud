@@ -11,5 +11,5 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
     boolean existsByUsername(String username);
 
-    Optional<CustomUser> findByUsernameIgnoreCase(String username);
+    Optional<CustomUser> findByUsername(String username);
 }

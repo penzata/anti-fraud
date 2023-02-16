@@ -247,7 +247,7 @@ class CustomUserServiceTest {
     @Test
     void WhenDeletingNonExistentUserThenThrowException() {
         doThrow(UsernameNotFoundException.class)
-                .when(customUserRepository).findByUsernameIgnoreCase(any());
+                .when(customUserRepository).findByUsername(any());
 
         Executable executable = () -> customUserService.deleteUser(any());
 
@@ -257,7 +257,7 @@ class CustomUserServiceTest {
     @Test
     void WhenDeleteNonExistentUserThenThrowExceptionAndDoNotInvokeDelete() {
         doThrow(UsernameNotFoundException.class)
-                .when(customUserRepository).findByUsernameIgnoreCase(any());
+                .when(customUserRepository).findByUsername(any());
 
         try {
             customUserService.deleteUser(any());
@@ -270,7 +270,7 @@ class CustomUserServiceTest {
 
     @Test
     void WhenDeletingExistentUserThenDoesNotThrowException() {
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
 
         Executable executable = () -> customUserService.deleteUser(any());
@@ -280,7 +280,7 @@ class CustomUserServiceTest {
 
     @Test
     void WhenDeletingExistentUserThenDoNothing() {
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
         doNothing().when(customUserRepository).deleteById(any());
 
@@ -300,7 +300,7 @@ class CustomUserServiceTest {
     @Test
     void WhenChangeRoleWithSameRoleThenThrowException() {
         user.setRole(UserRole.MERCHANT);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
 
         Executable executable = () -> customUserService.changeUserRole(user);
@@ -313,7 +313,7 @@ class CustomUserServiceTest {
         CustomUser secondUser = CustomUserFactory.create("JaneDoe", "jane333doe", "secretz");
         secondUser.setRole(UserRole.MERCHANT);
         user.setRole(UserRole.ADMINISTRATOR);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
 
         Executable executable = () -> customUserService.changeUserRole(secondUser);
@@ -326,7 +326,7 @@ class CustomUserServiceTest {
         CustomUser userInDB = CustomUserFactory.create("JohnDoe", "johndoe1", "secret");
         userInDB.setRole(UserRole.MERCHANT);
         user.setRole(UserRole.SUPPORT);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(userInDB));
         UserRole expectedRole = UserRole.SUPPORT;
 
@@ -341,7 +341,7 @@ class CustomUserServiceTest {
         CustomUser userInDB = CustomUserFactory.create("JohnDoe", "johndoe1", "secret");
         userInDB.setRole(UserRole.MERCHANT);
         user.setRole(UserRole.SUPPORT);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(userInDB));
 
         customUserService.changeUserRole(user);
@@ -360,7 +360,7 @@ class CustomUserServiceTest {
     @Test
     void WhenChangingAccessToAdministratorThenThrowException() {
         user.setRole(UserRole.ADMINISTRATOR);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
 
         Executable executable = () -> customUserService.grantAccess(user);
@@ -373,7 +373,7 @@ class CustomUserServiceTest {
         CustomUser userInDB = CustomUserFactory.create("JohnDoe", "johndoe1", "secret");
         userInDB.setAccess(UserAccess.LOCK);
         user.setAccess(UserAccess.UNLOCK);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(userInDB));
         UserAccess expectedAccessLevel = UserAccess.UNLOCK;
 
@@ -388,7 +388,7 @@ class CustomUserServiceTest {
         CustomUser userInDB = CustomUserFactory.create("JohnDoe", "johndoe1", "secret");
         userInDB.setAccess(UserAccess.LOCK);
         user.setAccess(UserAccess.UNLOCK);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(userInDB));
 
         customUserService.grantAccess(user);
@@ -408,7 +408,7 @@ class CustomUserServiceTest {
     void WhenRetrievingUsernameThenReturnRealUsername() {
         CustomUser userInDB = CustomUserFactory.create("JohnDoe", "JoHnDoe1", "secret");
         String expectedUsername = "JoHnDoe1";
-        given(customUserRepository.findByUsernameIgnoreCase(expectedUsername))
+        given(customUserRepository.findByUsername(expectedUsername))
                 .willReturn(Optional.of(userInDB));
 
         customUserService.retrieveRealUsername(expectedUsername);
@@ -428,7 +428,7 @@ class CustomUserServiceTest {
     void WhenLoadByUsernameThenReturnUserPrincipal() {
         user.setRole(UserRole.MERCHANT);
         UserPrincipal userPrincipal = new UserPrincipal(user);
-        given(customUserRepository.findByUsernameIgnoreCase(any()))
+        given(customUserRepository.findByUsername(any()))
                 .willReturn(Optional.of(user));
 
         UserDetails userDetails = customUserService.loadUserByUsername(any());

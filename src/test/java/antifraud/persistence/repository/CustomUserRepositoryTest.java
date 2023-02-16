@@ -58,7 +58,7 @@ class CustomUserRepositoryTest {
     @Test
     void WhenFindByNonExistentUsernameThenReturnEmpty() {
         Optional<CustomUser> nonExistentUser = customUserRepository
-                .findByUsernameIgnoreCase(username);
+                .findByUsername(username);
 
         assertThat(nonExistentUser).isEmpty();
     }
@@ -67,7 +67,7 @@ class CustomUserRepositoryTest {
     void WhenFindByUsernameThenReturnFoundUser() {
         entityManager.persist(customUser);
 
-        Optional<CustomUser> foundUser = customUserRepository.findByUsernameIgnoreCase(username);
+        Optional<CustomUser> foundUser = customUserRepository.findByUsername(username);
 
         assertThat(foundUser).isPresent();
     }

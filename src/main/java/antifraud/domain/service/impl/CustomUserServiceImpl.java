@@ -58,11 +58,12 @@ public class CustomUserServiceImpl implements CustomUserService {
     @Override
     public void deleteUser(String username) {
         CustomUser foundUser = foundByUsername(username);
+        roleCheckForAdmin(foundUser);
         customUserRepository.deleteById(foundUser.getId());
     }
 
     private CustomUser foundByUsername(String username) {
-        return customUserRepository.findByUsernameIgnoreCase(username)
+        return customUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
@@ -120,6 +121,7 @@ public class CustomUserServiceImpl implements CustomUserService {
     @Override
     public String retrieveRealUsername(String username) {
         CustomUser foundUser = foundByUsername(username);
+        roleCheckForAdmin(foundUser);
         return foundUser.getUsername();
     }
 
