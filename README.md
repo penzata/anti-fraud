@@ -14,7 +14,7 @@
 
 #### Domain layer:
 ##### model:
-* all the entity classes used for DB persistence with Jakarta persistence annotations. Every entity class uses Factory class for object creation.
+* all the entity classes used for DB persistence, with Jakarta persistence annotations. Every entity class uses Factory class for object creation, which is used and for the segregation between the entity classes' object creation in the domain layer and the dto ones' object creation in the controller layer.
 ##### service:
 * 5 interface services (CustomUser, RegularCard, StolenCard, SuspiciousIP, Transaction) with their concrete implementation.
 
