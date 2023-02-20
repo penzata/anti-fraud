@@ -1,6 +1,6 @@
 # RESTfull web service for Anti-Fraud System, with basic authentication and authorization, for handling money transactions, block stolen cards and suspicious IPs.
 
-3-layered API structure: rest, domain and persistence.
+3-layered API architecture: rest, domain and persistence.
 
 #### Rest layer:
 ##### controlers:
