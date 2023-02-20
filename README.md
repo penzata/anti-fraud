@@ -4,23 +4,23 @@
 
 #### Rest layer:
 * controlers:
-- user: 7 endpoint to handle user creation, listing all users, deleting user, change user role, change user access, login and list all users with the given access;
-- transaction: 4 enpoints to handle making money transaction, giving feedback to transaction, get all transactions' history(id, amount of money, ip adress, card number, world region, local date & time, transaction result & feedback) and get all transactions' history by a specific card number;
-- card: 3 endpoints for saving stolen card, deleting stolen card and listing all cards;
-- suspicious IP: 3 endpoints for saving suspicious IP, deleting IP and listing all IPs.
+user: 7 endpoint to handle user creation, listing all users, deleting user, change user role, change user access, login and list all users with the given access;
+transaction: 4 enpoints to handle making money transaction, giving feedback to transaction, get all transactions' history(id, amount of money, ip adress, card number, world region, local date & time, transaction result & feedback) and get all transactions' history by a specific card number;
+card: 3 endpoints for saving stolen card, deleting stolen card and listing all cards;
+suspicious IP: 3 endpoints for saving suspicious IP, deleting IP and listing all IPs.
 
 * dto:
-- instead of RequestEntity and ResponseEntity classes for serialization and deserialization, the API uses Java record classes with Jakarta, Jackson and custom annotations for validations.
+instead of RequestEntity and ResponseEntity classes for serialization and deserialization, the API uses Java record classes with Jakarta, Jackson and custom annotations for validations.
 
 #### Domain layer:
 * model:
-- all the entity classes used for DB persistence with Jakarta persistence annotations. Every entity class uses Factory class for object creation.
+all the entity classes used for DB persistence with Jakarta persistence annotations. Every entity class uses Factory class for object creation.
 * service:
-- 5 interface services (CustomUser, RegularCard, StolenCard, SuspiciousIP, Transaction) with their concrete implementation.
+5 interface services (CustomUser, RegularCard, StolenCard, SuspiciousIP, Transaction) with their concrete implementation.
 
 #### Persistence layer:
 * repository:
-- 5 repositories(one for each service) extending the JpaRepository.
+5 repositories(one for each service) extending the JpaRepository.
 
 API uses embedded H2 database and the DB's persistence is done through Spring Data JPA.
 
