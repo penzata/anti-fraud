@@ -24,7 +24,7 @@
 
 API uses embedded H2 database and the DB's persistence is done through Spring Data JPA.
 
-The API's using Base64 Spring Security authentication. The authorization's done at the Security Filter Chain level, and at the controllers' level through @PreAuthorize annotations.
+The API's using Base64 Spring Security authentication. The authorization's done with role-based access at the Security Filter Chain level, and at the controllers' level through @PreAuthorize annotations.
 
 API has a Global Exception Handler to handle the custom, authentication, cotroller and service level exceptions.
 
